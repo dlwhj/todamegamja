@@ -22,19 +22,19 @@ contract Potato is ERC721 {
         newId = _tokenIds.current();
         _safeMint(player, newId);
 
-        _explodeTimes[newId] = uint(keccak256(abi.encodePacked(now, msg.sender, _randNonce.current()))) % 24 hours;
+        _explodeTimes[newId] = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, _randNonce.current()))) % 24 hours;
         _randNonce.increment();
 
         return newId;
     }
 
     function explode(uint256 tokenId) public {
-        require(block.timestamp >= _explodeTime, "Not ready to explode yet!");
-        _safeTransfer(ownerOf(tokenId), )
+        require(block.timestamp >= _explodeTimes[tokenId], "Not ready to explode yet!");
+        // _safeTransfer(ownerOf(tokenId), )
     }
 
     function hasExploded(uint256 tokenId) public view returns(bool res) {
-        res = block.timestamp >= _explodeTime;
+        res = block.timestamp >= _explodeTimes[tokenId];
     }
 
 }
