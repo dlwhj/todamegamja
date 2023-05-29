@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract Potato is ERC721 {
+contract Potato is ERC721Enumerable {
     
     uint16 public constant MAX_POTATOES = 12;
 
@@ -22,6 +22,10 @@ contract Potato is ERC721 {
 
     constructor() ERC721("Potato", "P") {
         _contractOwner = msg.sender;
+    }
+
+    function getExplodeTime(uint256 tokenId) public view returns(uint256 explodeTime) {
+        explodeTime = _explodeTimes[tokenId];
     }
 
     function hasExploded(uint256 tokenId) public view returns(bool res) {
