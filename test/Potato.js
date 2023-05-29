@@ -191,6 +191,36 @@ describe("Potato", function () {
   //   await potato.connect(p5).play();
   // });
 
+  it("Potatos to players", async function () {
+    const [owner, p1, p2, p3, p4, p5, p6] = await ethers.getSigners();
+
+    const Potato = await ethers.getContractFactory("Potato");
+    const potato = await Potato.deploy();
+
+    await potato.connect(p1).play();
+    const t1 = await potato.getExplodeTime(1);
+    await potato.connect(p2).join(1);
+
+    await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
+
+    await potato.connect(p3).join(1);
+
+    await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
+
+    await potato.connect(p4).join(1);
+
+    await potato.connect(p1).transferFrom(p1.address, p2.address, 1);
+    await expect(potato.connect(p2).transferFrom(p2.address, p6.address, 1)).to.be.reverted;
+
+    await expect(potato.connect(p5).join(1)).to.be.reverted;
+
+    await time.increaseTo(t1);
+    await expect(potato.connect(p2).transferFrom(p2.address, p1.address, 1)).to.be.reverted;
+
+
+
+  });
+
 });
 
 
