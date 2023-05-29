@@ -5,8 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Todame is ERC20 {
 
+    address private _contractOwner;
+
     constructor(uint256 initialSupply) ERC20("Todame", "TDM") {
-        _mint(msg.sender, initialSupply);
+        _contractOwner = msg.sender;
+        _mint(_contractOwner, initialSupply);
     }
 
 }
