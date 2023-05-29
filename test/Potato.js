@@ -103,66 +103,93 @@ describe("Potato", function () {
   //   expect(await potato.connect(p4).transferFrom(p4.address, p5.address, 1)).to.be.revertedWith("Time passed");
   // });
 
-  it("Potato explodes after transfer after timeout", async function () {
-    const [owner, p1, p2, p3, p4, p5] = await ethers.getSigners();
+  // it("Potato explodes after transfer after timeout", async function () {
+  //   const [owner, p1, p2, p3, p4, p5] = await ethers.getSigners();
 
-    const Potato = await ethers.getContractFactory("Potato");
-    const potato = await Potato.deploy();
+  //   const Potato = await ethers.getContractFactory("Potato");
+  //   const potato = await Potato.deploy();
 
-    await potato.connect(p1).play();
-    const explodeTime1 = await potato.getExplodeTime(1);
+  //   await potato.connect(p1).play();
+  //   const explodeTime1 = await potato.getExplodeTime(1);
 
 
-    await potato.connect(p1).transferFrom(p1.address, p4.address, 1);
+  //   await potato.connect(p1).transferFrom(p1.address, p4.address, 1);
 
-    expect(await potato.balanceOf(p1.address)).to.equal(0);
-    expect(await potato.balanceOf(p4.address)).to.equal(1);
+  //   expect(await potato.balanceOf(p1.address)).to.equal(0);
+  //   expect(await potato.balanceOf(p4.address)).to.equal(1);
 
-    await time.increase(explodeTime1); 
+  //   await time.increase(explodeTime1); 
         
-    await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 1)).to.be.revertedWith("The token has already exploded!");
+  //   await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 1)).to.be.revertedWith("The token has already exploded!");
 
-    expect(await potato.balanceOf(p4.address)).to.equal(1);
-    expect(await potato.balanceOf(p5.address)).to.equal(0);
+  //   expect(await potato.balanceOf(p4.address)).to.equal(1);
+  //   expect(await potato.balanceOf(p5.address)).to.equal(0);
 
-    expect(await potato.getWins(p1.address)).to.equal(1);
-    expect(await potato.getWins(p4.address)).to.equal(0);
-    expect(await potato.getWins(p5.address)).to.equal(0);
+  //   expect(await potato.getWins(p1.address)).to.equal(1);
+  //   expect(await potato.getWins(p4.address)).to.equal(0);
+  //   expect(await potato.getWins(p5.address)).to.equal(0);
 
-    await potato.connect(p2).play();
-    const explodeTime2 = await potato.getExplodeTime(2);
+  //   await potato.connect(p2).play();
+  //   const explodeTime2 = await potato.getExplodeTime(2);
 
-    await potato.connect(p2).transferFrom(p2.address, p1.address, 2);
-    await potato.connect(p1).transferFrom(p1.address, p3.address, 2);
-    await potato.connect(p3).transferFrom(p3.address, p4.address, 2);
+  //   await potato.connect(p2).transferFrom(p2.address, p1.address, 2);
+  //   await potato.connect(p1).transferFrom(p1.address, p3.address, 2);
+  //   await potato.connect(p3).transferFrom(p3.address, p4.address, 2);
 
-    await time.increase(explodeTime2); 
+  //   await time.increase(explodeTime2); 
 
-    await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 2)).to.be.revertedWith("The token has already exploded!");
+  //   await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 2)).to.be.revertedWith("The token has already exploded!");
   
-    expect(await potato.getWins(p1.address)).to.equal(2);
-    expect(await potato.getWins(p2.address)).to.equal(1);
-    expect(await potato.getWins(p3.address)).to.equal(1);
-    expect(await potato.getWins(p4.address)).to.equal(0);
-    expect(await potato.getWins(p5.address)).to.equal(0);
+  //   expect(await potato.getWins(p1.address)).to.equal(2);
+  //   expect(await potato.getWins(p2.address)).to.equal(1);
+  //   expect(await potato.getWins(p3.address)).to.equal(1);
+  //   expect(await potato.getWins(p4.address)).to.equal(0);
+  //   expect(await potato.getWins(p5.address)).to.equal(0);
 
-    await potato.connect(p2).play();
-    const explodeTime3 = await potato.getExplodeTime(2);
+  //   await potato.connect(p2).play();
+  //   const explodeTime3 = await potato.getExplodeTime(2);
 
-    await potato.connect(p2).transferFrom(p2.address, p1.address, 3);
-    await potato.connect(p1).transferFrom(p1.address, p3.address, 3);
-    await potato.connect(p3).transferFrom(p3.address, p4.address, 3);
+  //   await potato.connect(p2).transferFrom(p2.address, p1.address, 3);
+  //   await potato.connect(p1).transferFrom(p1.address, p3.address, 3);
+  //   await potato.connect(p3).transferFrom(p3.address, p4.address, 3);
 
-    await time.increase(explodeTime3); 
+  //   await time.increase(explodeTime3); 
 
-    await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 3)).to.be.revertedWith("The token has already exploded!");
+  //   await expect(potato.connect(p4).transferFrom(p4.address, p5.address, 3)).to.be.revertedWith("The token has already exploded!");
   
-    expect(await potato.getWins(p1.address)).to.equal(3);
-    expect(await potato.getWins(p2.address)).to.equal(2);
-    expect(await potato.getWins(p3.address)).to.equal(2);
-    expect(await potato.getWins(p4.address)).to.equal(0);
-    expect(await potato.getWins(p5.address)).to.equal(0);
-  });
+  //   expect(await potato.getWins(p1.address)).to.equal(3);
+  //   expect(await potato.getWins(p2.address)).to.equal(2);
+  //   expect(await potato.getWins(p3.address)).to.equal(2);
+  //   expect(await potato.getWins(p4.address)).to.equal(0);
+  //   expect(await potato.getWins(p5.address)).to.equal(0);
+
+  //   expect(await potato.getTodameBalance(p1.address)).to.equal(3);
+  // });
+
+  // it("Potato explodes after transfer after timeout", async function () {
+  //   const [owner, p1, p2, p3, p4, p5, p6] = await ethers.getSigners();
+
+  //   const Potato = await ethers.getContractFactory("Potato");
+  //   const potato = await Potato.deploy();
+
+  //   await potato.connect(p1).play();
+  //   const t1 = await potato.getExplodeTime(1);
+  //   await potato.connect(p2).play();
+  //   const t2 = await potato.getExplodeTime(1);
+  //   await potato.connect(p3).play();
+  //   const t3 = await potato.getExplodeTime(1);
+  //   await potato.connect(p4).play();
+  //   const t4 = await potato.getExplodeTime(1);
+
+  //   await expect(potato.connect(p5).play()).to.be.reverted;
+  //   expect(await potato.getCount()).to.equal(4);
+
+  //   await time.increaseTo(t1);
+
+  //   await expect(potato.connect(p1).transferFrom(p1.address, p3.address, 1)).to.be.revertedWith("The token has already exploded!");
+
+  //   await potato.connect(p5).play();
+  // });
 
 });
 

@@ -11,13 +11,11 @@ import "hardhat/console.sol";
 
 contract Potato is ERC721Enumerable {
     
-    uint16 public constant MAX_POTATOES = 12;
+    uint16 public constant MAX_POTATOES = 4;
     uint256 public constant MAX_EXPLODE_TIME = 6 hours;
 
     mapping(address => uint256) public wins; 
 
-    using EnumerableMap for EnumerableMap.AddressToUintMap;
-    EnumerableMap.AddressToUintMap private winners;
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenId;
@@ -28,7 +26,8 @@ contract Potato is ERC721Enumerable {
 
     Todame private _todame;
 
-    mapping(uint256 => uint256) private _explodeTimes;
+    using EnumerableMap for EnumerableMap.UintToUintMap;
+    EnumerableMap.UintToUintMap private _explodeTimes;
 
     constructor() ERC721("Potato", "P") {
         _contractOwner = msg.sender;
@@ -41,29 +40,26 @@ contract Potato is ERC721Enumerable {
     }
 
     // DEBUG
-    function getExplodeTime(uint256 tokenId) public view returns(uint256 explodeTime) {
-        explodeTime = _explodeTimes[tokenId];
-    }
-
-    // DEBUG
     function getCount() public view returns(uint16 count) {
         count = _count;
     }
 
     // DEBUG
-    function setExplodeTime(uint256 tokenId, uint256 explodeTime) public {
-        _explodeTimes[tokenId] = explodeTime;
+    function getExplodeTime(uint256 tokenId) public view returns(uint256 explodeTime) {
+        explodeTime = _explodeTimes.get(tokenId);
     }
 
     function hasExploded(uint256 tokenId) public view returns(bool res) {
-        res = _explodeTimes[tokenId] == 0;
+        res = _explodeTimes.get(tokenId) == 0 || block.timestamp > _explodeTimes.get(tokenId);
     }
 
     function getWins(address player) public view returns(uint256 num) {
         num = wins[player];
     }
 
-    function play() public returns(uint256 newId) {
+    function play() public returns(uint256 newId) {  
+        _explode();
+       
         require(_count < MAX_POTATOES, "There are already maximum number of potatoes...");
         
         _tokenId.increment();
@@ -72,31 +68,21 @@ contract Potato is ERC721Enumerable {
         newId = _tokenId.current();
         _safeMint(msg.sender, newId);
 
-        _explodeTimes[newId] = block.timestamp + (uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, _randNonce.current()))) % MAX_EXPLODE_TIME);
+        _explodeTimes.set(newId, block.timestamp + (uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, _randNonce.current()))) % MAX_EXPLODE_TIME));
         _randNonce.increment();
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize) internal virtual override {
-        if (from != address(0) && block.timestamp > _explodeTimes[tokenId]) {
+        if (from != address(0) && block.timestamp > _explodeTimes.get(tokenId)) {
             console.log("Explode %s -> %s : %d", from, to, tokenId);
-            _explode(tokenId);
-            winners.set(from, 0);
             revert("The token has already exploded!");
         }
 
         if (from != address(0)) {
             wins[from] += 1;
-            (bool found, uint256 w) = winners.tryGet(from);
-            if (found) {
-                winners.set(from, w + 1);
-            }
-            else {
-                winners.set(from, 1);
-            }
-            ( found,  w) = winners.tryGet(from);
+            _todame.transfer(from, 1);
+            console.log("Transfer %s -> %s : %d", from, to, tokenId);
         }
-
-        console.log("Transfer %s -> %s : %d", from, to, tokenId);
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 
@@ -105,21 +91,18 @@ contract Potato is ERC721Enumerable {
         super._afterTokenTransfer(from, to, tokenId, batchSize);
     }
 
-    function _explode(uint256 tokenId) private {
-        _count -= 1;
-        delete _explodeTimes[tokenId];
-        _endGame();
-    }
+    function _explode() private {
+        uint16 i = 0;
+        
+        while (i < _explodeTimes.length()) {
+            (uint256 tokenId, uint256 explodeTime) = _explodeTimes.at(i);
 
-    function _endGame() private {
-        uint256 i = 0;
-        while (i < winners.length()) {
-            (address player, uint256 w) = winners.at(i);
-            if (player != address(0) && w > 0) {
-                console.log("Game END: %s has won %d rounds", player, w);
-                _todame.transfer(player, 1);
-                winners.remove(player);
+            if (block.timestamp > explodeTime) {
+                _count -= 1;
+                _explodeTimes.remove(tokenId);
+                console.log("Cleaning up %d, count is: ", tokenId, _count);
             }
+
             i++;
         }
     }
