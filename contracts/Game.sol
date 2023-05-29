@@ -4,31 +4,25 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Game is ERC721, Potato {
 
-    using Counters for Counters.Counter;
+    Counters.Counter private _gameIds;
 
-    address private _contractOwner;
-
-    function balanceOf(address _owner) external view returns uint256 {
-        return;
-    }
-
-    function ownerOf(uint256 _tokenId) external view returns address {
-        return;
-    }
-
-    function _transfer(address _from, address _to, uint256 _tokenId) private {
-        ownerPotatoCount[_to].increment();
-        ownerPotatoCount[_from].increment();
-        PotatoToOwner[_tokenId] = _to;
-        emit Transfer(_from, _to, _tokenId);
-    }
-
-    function transferFrom(address _from, address _to, uint256 _tokenId) external payable {
-        _transfer(_from, _to, _tokenId);
-    }
-
-    function start() internal {
+    function start(address from, address to, uint256 potatoId) internal returns(uint256 newGameId) {
         require(_tokenIds < 12, "There are already maximum number of potatoes...");
-        
+        safeTransferFrom(from, to, potatoId);
+        _gameIds.increment();
+        newGameId = _gameIds.current();
+        return newId;
     }
+
+    function gameEnded(uint256 potatoId) internal returns(bool) {
+        if (ownerOf(potatoId) == _contractOwner) {
+            _gameIds.decrement();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
 }
