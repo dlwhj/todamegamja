@@ -2,8 +2,11 @@
   "name": "todame",
   "version": "1.0.0",
   "description": "A simple Web3 game.",
+  "homepage": "https://dlwhj.github.io/todamegamja",
   "main": "index.js",
   "scripts": {
+    "predeploy": "cd frontend && npm run build",
+    "deploy": "gh-pages -d build",
     "test": "npx hardhat test"
   },
   "author": "sejongmates",
@@ -12,5 +15,8 @@
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@openzeppelin/contracts": "^4.9.0",
     "hardhat": "^2.14.0"
+  },
+  "dependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
