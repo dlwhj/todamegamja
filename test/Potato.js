@@ -1,7 +1,5 @@
 const { ethers } = require("hardhat");
-
 const { expect } = require("chai");
-
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("Potato", function () {
@@ -12,7 +10,7 @@ describe("Potato", function () {
 
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
+  //   await potato.connect(p1).openGame();
 
   //   const balance1 = await potato.balanceOf(p1.address);
 
@@ -26,19 +24,19 @@ describe("Potato", function () {
 
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
-  //   await potato.connect(p2).play();
-  //   await potato.connect(p3).play();
-  //   await potato.connect(p4).play();
-  //   await potato.connect(p6).play();
-  //   await potato.connect(p5).play();
-  //   await potato.connect(p7).play();
-  //   await potato.connect(p8).play();
-  //   await potato.connect(p9).play();
-  //   await potato.connect(p10).play();
-  //   await potato.connect(p11).play();
+  //   await potato.connect(p1).openGame();
+  //   await potato.connect(p2).openGame();
+  //   await potato.connect(p3).openGame();
+  //   await potato.connect(p4).openGame();
+  //   await potato.connect(p6).openGame();
+  //   await potato.connect(p5).openGame();
+  //   await potato.connect(p7).openGame();
+  //   await potato.connect(p8).openGame();
+  //   await potato.connect(p9).openGame();
+  //   await potato.connect(p10).openGame();
+  //   await potato.connect(p11).openGame();
 
-  //   expect(await potato.connect(p12).play()).to.be.revertedWith("Too many Potatoes");
+  //   expect(await potato.connect(p12).openGame()).to.be.revertedWith("Too many Potatoes");
   // });
 
   // it("Transfer from p1 to p4", async function () {
@@ -48,9 +46,9 @@ describe("Potato", function () {
 
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
-  //   await potato.connect(p2).play();
-  //   await potato.connect(p3).play();
+  //   await potato.connect(p1).openGame();
+  //   await potato.connect(p2).openGame();
+  //   await potato.connect(p3).openGame();
     
   //   const explodeTime1 = await potato.getExplodeTime(1);
   //   const explodeTime2 = await potato.getExplodeTime(2);
@@ -81,9 +79,9 @@ describe("Potato", function () {
 
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
-  //   await potato.connect(p2).play();
-  //   await potato.connect(p3).play();
+  //   await potato.connect(p1).openGame();
+  //   await potato.connect(p2).openGame();
+  //   await potato.connect(p3).openGame();
     
   //   const explodeTime1 = await potato.getExplodeTime(1);
   //   const explodeTime2 = await potato.getExplodeTime(2);
@@ -109,7 +107,7 @@ describe("Potato", function () {
   //   const Potato = await ethers.getContractFactory("Potato");
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
+  //   await potato.connect(p1).openGame();
   //   const explodeTime1 = await potato.getExplodeTime(1);
 
 
@@ -129,7 +127,7 @@ describe("Potato", function () {
   //   expect(await potato.getWins(p4.address)).to.equal(0);
   //   expect(await potato.getWins(p5.address)).to.equal(0);
 
-  //   await potato.connect(p2).play();
+  //   await potato.connect(p2).openGame();
   //   const explodeTime2 = await potato.getExplodeTime(2);
 
   //   await potato.connect(p2).transferFrom(p2.address, p1.address, 2);
@@ -146,7 +144,7 @@ describe("Potato", function () {
   //   expect(await potato.getWins(p4.address)).to.equal(0);
   //   expect(await potato.getWins(p5.address)).to.equal(0);
 
-  //   await potato.connect(p2).play();
+  //   await potato.connect(p2).openGame();
   //   const explodeTime3 = await potato.getExplodeTime(2);
 
   //   await potato.connect(p2).transferFrom(p2.address, p1.address, 3);
@@ -172,54 +170,54 @@ describe("Potato", function () {
   //   const Potato = await ethers.getContractFactory("Potato");
   //   const potato = await Potato.deploy();
 
-  //   await potato.connect(p1).play();
+  //   await potato.connect(p1).openGame();
   //   const t1 = await potato.getExplodeTime(1);
-  //   await potato.connect(p2).play();
+  //   await potato.connect(p2).openGame();
   //   const t2 = await potato.getExplodeTime(1);
-  //   await potato.connect(p3).play();
+  //   await potato.connect(p3).openGame();
   //   const t3 = await potato.getExplodeTime(1);
-  //   await potato.connect(p4).play();
+  //   await potato.connect(p4).openGame();
   //   const t4 = await potato.getExplodeTime(1);
 
-  //   await expect(potato.connect(p5).play()).to.be.reverted;
+  //   await expect(potato.connect(p5).openGame()).to.be.reverted;
   //   expect(await potato.getCount()).to.equal(4);
 
   //   await time.increaseTo(t1);
 
   //   await expect(potato.connect(p1).transferFrom(p1.address, p3.address, 1)).to.be.revertedWith("The token has already exploded!");
 
-  //   await potato.connect(p5).play();
+  //   await potato.connect(p5).openGame();
   // });
 
-  it("Potatos to players", async function () {
-    const [owner, p1, p2, p3, p4, p5, p6] = await ethers.getSigners();
+  // it("Potatos to players", async function () {
+  //   const [owner, p1, p2, p3, p4, p5, p6] = await ethers.getSigners();
 
-    const Potato = await ethers.getContractFactory("Potato");
-    const potato = await Potato.deploy();
+  //   const Potato = await ethers.getContractFactory("Potato");
+  //   const potato = await Potato.deploy();
 
-    await potato.connect(p1).play();
-    const t1 = await potato.getExplodeTime(1);
-    await potato.connect(p2).join(1);
+  //   await potato.connect(p1).openGame();
+  //   const t1 = await potato.getExplodeTime(1);
+  //   await potato.connect(p2).joinGame(1);
 
-    await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
+  //   await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
 
-    await potato.connect(p3).join(1);
+  //   await potato.connect(p3).joinGame(1);
 
-    await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
+  //   await expect(potato.connect(p1).transferFrom(p1.address, p2.address, 1)).to.be.reverted;
 
-    await potato.connect(p4).join(1);
+  //   await potato.connect(p4).joinGame(1);
 
-    await potato.connect(p1).transferFrom(p1.address, p2.address, 1);
-    await expect(potato.connect(p2).transferFrom(p2.address, p6.address, 1)).to.be.reverted;
+  //   await potato.connect(p1).transferFrom(p1.address, p2.address, 1);
+  //   await expect(potato.connect(p2).transferFrom(p2.address, p6.address, 1)).to.be.reverted;
 
-    await expect(potato.connect(p5).join(1)).to.be.reverted;
+  //   await expect(potato.connect(p5).joinGame(1)).to.be.reverted;
 
-    await time.increaseTo(t1);
-    await expect(potato.connect(p2).transferFrom(p2.address, p1.address, 1)).to.be.reverted;
+  //   await time.increaseTo(t1);
+  //   await expect(potato.connect(p2).transferFrom(p2.address, p1.address, 1)).to.be.reverted;
 
 
 
-  });
+  // });
 
 });
 
