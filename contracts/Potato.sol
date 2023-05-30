@@ -16,7 +16,7 @@ contract Potato is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     using EnumerableMap for EnumerableMap.UintToUintMap;
 
-    uint8 public constant MAX_POTATOES = 11;
+    uint8 public constant MAX_POTATOES = 3;
     uint256 public constant MAX_EXPLODE_TIME = 6 hours;
 
     uint8 public potatoCount; // number of living Potato tokens
@@ -30,18 +30,25 @@ contract Potato is ERC721Enumerable, Ownable {
     EnumerableMap.UintToUintMap private _explodeTimes;
     mapping(uint256 => address[]) private _potatoToPlayers;
 
-    event openedGame(address player, uint256 potatoId);
-    event joinedGame(address player, uint256 potatoId);
+    event openedGame(address player, uint256 potatoId, uint8 potatoCount);
+    event joinedGame(address player, uint256 potatoId, uint8 potatoCount, address[] players);
+    event potatoSent(address from, address to, uint256 potatoId);
+    event potatoExploded(uint256 potatoId);
+    event gameStarted(uint256 potatoId);
 
     constructor() ERC721("Potato", "P") {
         _contractOwner = msg.sender;
         _todame = new Todame(100000);
     }
-    
+
     function getTDMBalance(address player) external view returns(uint256 balance) {
         balance = _todame.balanceOf(player); 
     }
 
+    function getPlayersForPotato(uint256 potatoId) external view returns(address[] memory players) {
+        players = _potatoToPlayers[potatoId];
+    }
+    
     function isAlive(uint256 potatoId) external view returns(bool res) {
         res = !(_explodeTimes.get(potatoId) == 0 || block.timestamp > _explodeTimes.get(potatoId));
     }
@@ -66,30 +73,41 @@ contract Potato is ERC721Enumerable, Ownable {
 
         _potatoToPlayers[newId].push(msg.sender);
 
-        emit openedGame(msg.sender, newId);
+        emit openedGame(msg.sender, newId, potatoCount);
     }
 
     function joinGame(uint256 potatoId) public {
         require(_potatoToPlayers[potatoId].length < MAX_POTATOES, "There are too many players here...");
 
+        if (_potatoToPlayers[potatoId].length == MAX_POTATOES) {
+            emit gameStarted(potatoId);
+        }
+
         _potatoToPlayers[potatoId].push(msg.sender);
 
-        emit joinedGame(msg.sender, potatoId);
+        emit joinedGame(msg.sender, potatoId, potatoCount, _potatoToPlayers[potatoId]);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 potatoId, uint256 batchSize) internal virtual override {
         if (from == address(0)) {
             super._beforeTokenTransfer(from, to, potatoId, batchSize);
+
             return;
         }
 
         require(_potatoToPlayers[potatoId].length == MAX_POTATOES, "Not ready!");
         require(_isPlayerJoined(potatoId, to), "Invalid destination!");
-        require(block.timestamp <= _explodeTimes.get(potatoId), "The token has already exploded!");
+
+        if (block.timestamp <= _explodeTimes.get(potatoId)) {
+            emit potatoExploded(potatoId);
+            revert("The token has already exploded!");
+        }
 
         wins[from] += 1;
         _todame.transfer(from, 1);
         console.log("Transfer %s -> %s : %d", from, to, potatoId);
+
+        emit potatoSent(from, to, potatoId);
 
         super._beforeTokenTransfer(from, to, potatoId, batchSize);
     }
@@ -101,6 +119,7 @@ contract Potato is ERC721Enumerable, Ownable {
             (uint256 potatoId, uint256 explodeTime) = _explodeTimes.at(i);
 
             if (block.timestamp > explodeTime) {
+                emit potatoExploded(potatoId);
                 potatoCount -= 1;
                 _explodeTimes.remove(potatoId);
                 delete _potatoToPlayers[potatoId];

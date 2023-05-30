@@ -2,12 +2,11 @@
 
 A simple Web3 game.
 
-For development:
+To run (NOTE: the contract address needs to be updated accordingly in `frontend/src/App.js`):
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat run scripts/deploy.js
+npx hardhat run --network localhost ./scripts/deploy.js
+cd frontend && npm start
 ```
+
