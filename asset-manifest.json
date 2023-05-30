@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/todamegamja/static/css/main.073c9b0a.css",
+    "main.js": "/todamegamja/static/js/main.f5882e4b.js",
+    "static/js/787.cda612ba.chunk.js": "/todamegamja/static/js/787.cda612ba.chunk.js",
+    "index.html": "/todamegamja/index.html",
+    "main.073c9b0a.css.map": "/todamegamja/static/css/main.073c9b0a.css.map",
+    "main.f5882e4b.js.map": "/todamegamja/static/js/main.f5882e4b.js.map",
+    "787.cda612ba.chunk.js.map": "/todamegamja/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.f5882e4b.js"
+  ]
+}
