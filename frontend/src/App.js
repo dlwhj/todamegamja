@@ -171,6 +171,8 @@ function App() {
       <h1>토다메감자 TodameGamja</h1>
       <p>Potato Count: {potatoCount}</p>
       <p>Current Player: {curPlayer}</p>
+      <p>Github Page: <a href="https://github.com/dlwhj/todamegamja">https://github.com/dlwhj/todamegamja</a> </p>
+      <p>Note: Ensure you connect with a running localhost Hardhat network.</p>
       <button onClick={connect}>CONNECT</button>
       <div>
         <button onClick={openGame}>Get New Potato</button>
